@@ -1,4 +1,4 @@
-package Map;
+package map;
 
 import java.awt.Point;
 import java.util.Collections;

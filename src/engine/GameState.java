@@ -3,8 +3,8 @@ package engine;
 import java.awt.Point;
 import java.util.Random;
 
-import Map.GameMap;
-import Map.MovingObstacle;
+import map.GameMap;
+import map.MovingObstacle;
 import model.Snake;
 
 public class GameState {

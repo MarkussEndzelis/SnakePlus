@@ -13,10 +13,10 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import Map.ClassicMap;
-import Map.GameMap;
 import engine.Direction;
 import engine.GameState;
+import map.ClassicMap;
+import map.GameMap;
 import model.Snake;
 
 public class GamePanel extends JPanel {
