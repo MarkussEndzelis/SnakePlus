@@ -2,16 +2,19 @@ package ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.Timer;
 
 import javax.swing.JPanel;
-import java.awt.Font;
+import javax.swing.Timer;
+
+import Map.ClassicMap;
+import Map.GameMap;
 import engine.Direction;
 import engine.GameState;
 import model.Snake;
@@ -41,17 +44,17 @@ public class GamePanel extends JPanel {
 					state.getSnake().setNextDirection(d);
 				}
 				if(e.getKeyCode() == KeyEvent.VK_R && state.isGameOver()) {
-					startGame();
+					startGame(new ClassicMap());
 				}
 			}
 		});
-		startGame();
+		startGame(new ClassicMap());
 	}
-	private void startGame() {
+	private void startGame(GameMap map) {
 		if(timer != null) {
 			timer.stop();
 		}
-		state = new GameState();
+		state = new GameState(map);
 		timer = new Timer(120, e -> {
 			state.update();
 			repaint();
@@ -67,6 +70,8 @@ public class GamePanel extends JPanel {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		drawGrid(g2);
+		drawWalls(g2);
+		drawMovingObstacles(g2);
 		drawFood(g2);
 		drawSnake(g2);
 		drawHUD(g2);
@@ -120,5 +125,18 @@ public class GamePanel extends JPanel {
 		g.drawString("Press R to restart", getWidth() / 2 - 70, getHeight() /2 + 25);
 		g.drawString("Score: " + state.getScore(), getWidth() / 2 - 40, getHeight() / 2 + 50);
 		
+	}
+	private void drawWalls(Graphics2D g) {
+		g.setColor(Color.decode("#576574"));
+		for(Point p : state.getMap().getWalls()) {
+			g.fillRect(p.x * TILE, p.y * TILE, TILE, TILE);
+		}
+	}
+	private void drawMovingObstacles(Graphics2D g) {
+		g.setColor(Color.decode("#ff6b81"));
+		for(var mo : state.getMap().getMovingObstacles()) {
+			Point p = mo.getPosition();
+			g.fillRoundRect(p.x * TILE + 1, p.y * TILE + 1, TILE - 2, TILE -2, 6, 6);
+		}
 	}
 }

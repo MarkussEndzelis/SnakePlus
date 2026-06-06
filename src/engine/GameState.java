@@ -3,6 +3,8 @@ package engine;
 import java.awt.Point;
 import java.util.Random;
 
+import Map.GameMap;
+import Map.MovingObstacle;
 import model.Snake;
 
 public class GameState {
@@ -10,12 +12,14 @@ public class GameState {
 	public static final int ROWS = 24;
 	
 	private final Snake snake;
+	private final GameMap map;
 	private Point food;
 	private int score = 0;
 	private boolean gameOver = false;
 	private final Random rng = new Random();
 	
-	public GameState() {
+	public GameState(GameMap map) {
+		this.map = map;
 		snake = new Snake(COLS / 2, ROWS / 2);
 		spawnFood();
 	}
@@ -23,12 +27,28 @@ public class GameState {
 	public void update() {
 		if(gameOver) return;
 		
+		for(MovingObstacle mo : map.getMovingObstacles()) {
+			mo.update();
+		}
+		
 		snake.move();
 		Point head = snake.getHead();
 		
 		if(head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) {
 			gameOver = true;
 			return;
+		}
+		
+		if(map.getWalls().contains(head)) {
+			gameOver = true;
+			return;
+		}
+		
+		for(MovingObstacle mo : map.getMovingObstacles()) {
+			if(mo.getPosition().equals(head)) {
+				gameOver = true;
+				return;
+			}
 		}
 		
 		if(snake.collidesWithSelf()) {
@@ -54,6 +74,9 @@ public class GameState {
 	
 	public Snake getSnake() {
 		return snake;
+	}
+	public GameMap getMap() {
+		return map;
 	}
 	public Point getFood() {
 		return food;
