@@ -20,6 +20,11 @@ import map.GameMap;
 import model.Snake;
 
 public class GamePanel extends JPanel {
+	private Runnable onBackToMenu;
+	public void setOnBackToMenu(Runnable r) {
+		onBackToMenu = r;
+	}
+	
 	public static final int TILE = 24;
 	
 	private GameState state;
@@ -46,11 +51,16 @@ public class GamePanel extends JPanel {
 				if(e.getKeyCode() == KeyEvent.VK_R && state.isGameOver()) {
 					startGame(new ClassicMap());
 				}
+				if(e.getKeyCode() == KeyEvent.VK_M && state.isGameOver()) {
+					if(onBackToMenu != null) {
+						onBackToMenu.run();
+					}
+				}
 			}
 		});
 		startGame(new ClassicMap());
 	}
-	private void startGame(GameMap map) {
+	public void startGame(GameMap map) {
 		if(timer != null) {
 			timer.stop();
 		}
@@ -124,6 +134,7 @@ public class GamePanel extends JPanel {
 		g.setFont(new Font("Arial", Font.PLAIN, 16));
 		g.drawString("Press R to restart", getWidth() / 2 - 70, getHeight() /2 + 25);
 		g.drawString("Score: " + state.getScore(), getWidth() / 2 - 40, getHeight() / 2 + 50);
+		g.drawString("Press M for map select", getWidth() / 2 - 85, getHeight() / 2 + 75);
 		
 	}
 	private void drawWalls(Graphics2D g) {

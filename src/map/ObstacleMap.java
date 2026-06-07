@@ -11,19 +11,19 @@ public class ObstacleMap implements GameMap {
 	private final List<MovingObstacle> movers;
 	
 	public ObstacleMap() {
-		for(int i = 10; i <= 20; i++) {
-			walls.add(new Point(i, 12));
+		for(int i = 10; i <= 13; i++) {
+			walls.add(new Point(i, 10));
 		}
-		for(int i = 8; i <= 16; i++) {
-			walls.add(new Point(15, i));
+		for(int i = 17; i <= 20; i++) {
+			walls.add(new Point(i, 10));
 		}
 		
-		for(int x = 3; x <= 6; x++) {
-			for(int y = 3; y <= 5; y++) {
+		for(int x = 3; x <= 5; x++) {
+			for(int y = 18; y <= 21; y++) {
 				walls.add(new Point(x, y));
 			}
 		}
-		for(int x = 23; x <= 26; x++) {
+		for(int x = 24; x <= 26; x++) {
 			for(int y = 18; y <= 21; y++) {
 				walls.add(new Point(x, y));
 			}

@@ -65,6 +65,11 @@ public class GameState {
 	
 	private void spawnFood() {
 		var occupied = snake.getBodySet();
+		occupied.addAll(map.getWalls());
+		
+		for(var mo : map.getMovingObstacles()) {
+			occupied.add(mo.getPosition());
+		}
 		Point p;
 		do {
 			p = new Point(rng.nextInt(COLS), rng.nextInt(ROWS));
