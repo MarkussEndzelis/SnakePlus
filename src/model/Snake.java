@@ -58,6 +58,10 @@ public class Snake {
 		Point head = body.peekFirst();
 		return body.stream().skip(1).anyMatch(p -> p.equals(head));
 	}
+	public void teleportHead(Point newHead) {
+		body.removeFirst();
+		body.addFirst(newHead);
+	}
 
 	public Set<Point> getBodySet() {
 		return new HashSet<>(body);
