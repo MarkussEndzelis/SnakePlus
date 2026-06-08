@@ -10,6 +10,7 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -20,6 +21,7 @@ import map.ClassicMap;
 import map.GameMap;
 import model.Snake;
 import powerup.PowerUp;
+import score.HighScoremanager;
 import skin.SkinRegistry;
 import skin.SnakeSkin;
 
@@ -27,6 +29,7 @@ public class GamePanel extends JPanel {
 	private Runnable onBackToMenu;
 	private SnakeSkin currentSkin = SkinRegistry.ALL[0];
 	private boolean powerUpsEnabled = true;
+	private boolean newHighScore = false;
 
 	public void setPowerUpsEnabled(boolean enabled) {
 		powerUpsEnabled = enabled;
@@ -81,12 +84,16 @@ public class GamePanel extends JPanel {
 			timer.stop();
 		}
 		state = new GameState(map, powerUpsEnabled);
+		newHighScore = false;
 		timer = new Timer(state.getTickInterval(), e -> {
 			state.update();
 			timer.setDelay(state.getTickInterval());
 			repaint();
-			if (state.isGameOver())
+			if(state.isGameOver()) {
 				((Timer) e.getSource()).stop();
+				newHighScore = HighScoremanager.isHighScore(state.getMap().getName(), state.getScore());
+				HighScoremanager.saveScore(state.getMap().getName(), state.getScore());
+			}
 		});
 		timer.start();
 	}
@@ -173,13 +180,35 @@ public class GamePanel extends JPanel {
 	private void drawGameOver(Graphics2D g) {
 		g.setColor(new Color(0, 0, 0, 160));
 		g.fillRect(0, 0, getWidth(), getHeight());
+		
+		int cx = getWidth() / 2;
+		int cy = getHeight() / 2;
+		
+		if(newHighScore) {
+			g.setColor(Color.decode("#ffd32a"));
+			g.setFont(new Font("Arial", Font.BOLD, 22));
+			g.drawString("NEW HIGH SCORE!", cx - 105, cy - 60);
+		}
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", Font.BOLD, 36));
 		g.drawString("GAME OVER", getWidth() / 2 - 95, getHeight() / 2 - 10);
 		g.setFont(new Font("Arial", Font.PLAIN, 16));
-		g.drawString("Press R to restart", getWidth() / 2 - 70, getHeight() / 2 + 25);
-		g.drawString("Score: " + state.getScore(), getWidth() / 2 - 40, getHeight() / 2 + 50);
-		g.drawString("Press M for map select", getWidth() / 2 - 85, getHeight() / 2 + 75);
+		g.drawString("Score: " + state.getScore(), cx - 40, cy + 15);
+		g.setFont(new Font("Arial", Font.PLAIN, 16));
+		g.setColor(Color.decode("#a4b0be"));
+		g.drawString("TOP SCORES - " + state.getMap().getName(), cx - 90, cy + 45);
+		
+		List<Integer> scores = HighScoremanager.getScores(state.getMap().getName());
+		g.setFont(new Font("Arial", Font.PLAIN, 13));
+		for(int i = 0; i < scores.size(); i++) {
+			boolean isThis = scores.get(i) == state.getScore() && newHighScore && i == 0;
+			g.setColor(isThis ? Color.decode("#ffd32a") : Color.WHITE);
+			g.drawString((i + 1) + ".  " + scores.get(i), cx - 30, cy + 65 + i * 18);
+		}
+		
+		g.setColor(Color.decode("#576574"));
+		g.setFont(new Font("Arial", Font.PLAIN, 13));
+		g.drawString("R - restart   M - map select", cx - 100, cy + 165);
 
 	}
 

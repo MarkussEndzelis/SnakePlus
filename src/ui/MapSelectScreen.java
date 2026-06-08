@@ -147,7 +147,7 @@ public class MapSelectScreen extends JPanel{
 	private String getDescription(GameMap map) {
 		return switch(map.getName()) {
 		case "Classic" -> "Open grid, no obstacles";
-		case "Obstacle Course" -> "Walls + moving obstacles";
+		case "Obstacle map" -> "Walls + moving obstacles";
 		default -> "";
 		};
 	}

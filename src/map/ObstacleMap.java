@@ -35,7 +35,7 @@ public class ObstacleMap implements GameMap {
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "Obstacle Course";
+		return "Obstacle map";
 	}
 
 	@Override
