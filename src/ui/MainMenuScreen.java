@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import engine.GameState;
+import util.FontManager;
 
 public class MainMenuScreen extends JPanel {
 
@@ -151,7 +152,7 @@ public class MainMenuScreen extends JPanel {
 		}
 	}
 	private void drawTitle(Graphics2D g, int w, int h) {
-		Font titleFont = new Font("Arial", Font.BOLD, 72);
+		Font titleFont = FontManager.GAME_LARGE;
 		g.setFont(titleFont);
 		FontMetrics fm = g.getFontMetrics();
 		String title = "SNAKE+";
@@ -180,7 +181,7 @@ public class MainMenuScreen extends JPanel {
 		g.fillRoundRect(bx, by, bw, bh, 14, 14);
 		
 		g.setColor(Color.decode("#0f0f1a"));
-		Font btnFont = new Font("Arial", Font.BOLD, 22);
+		Font btnFont = FontManager.GAME;
 		g.setFont(btnFont);
 		FontMetrics fm = g.getFontMetrics();
 		String label = "PLAY";
@@ -190,14 +191,14 @@ public class MainMenuScreen extends JPanel {
 	}
 	private void drawSubtitle(Graphics2D g, int w, int h) {
 		String hint = "Click ENTER / SPACE / PLAY to start";
-		Font f = new Font("Arial", Font.PLAIN, 13);
+		Font f = FontManager.GAME_SMALL;
 		g.setFont(f);
 		FontMetrics fm = g.getFontMetrics();
 		g.setColor(Color.decode("#576574"));
 		g.drawString(hint, (w - fm.stringWidth(hint)) / 2, h / 2 + 100);
 		
 		String ver = "v1.0 Snake+";
-		g.setFont(new Font("Arial", Font.PLAIN, 11));
+		g.setFont(FontManager.GAME_SMALL);
 		fm = g.getFontMetrics();
 		g.setColor(new Color(255, 255, 255, 40));
 		g.drawString(ver, (w - fm.stringWidth(ver)) / 2, h - 15);
@@ -207,5 +208,10 @@ public class MainMenuScreen extends JPanel {
 		int gr = (int)(a.getGreen() + (b.getGreen() - a.getGreen()) * t);
 		int bl = (int)(a.getBlue() + (b.getBlue() - a.getBlue()) * t);
 		return new Color(r, gr, bl);
+	}
+	@Override
+	public void addNotify() {
+		super.addNotify();
+		requestFocusInWindow();
 	}
 }

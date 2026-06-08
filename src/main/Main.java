@@ -61,7 +61,7 @@ public class Main {
 			gamePanel.setOnBackToMenu(() -> {
 				mainMenu.startAnim();
 				cards.show(root, "MAIN_MENU");
-				mapSelect.requestFocusInWindow();
+				SwingUtilities.invokeLater(() -> mainMenu.requestFocusInWindow());
 			});
 			frame.add(root);
 			frame.pack();

@@ -2,7 +2,7 @@ package ui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 
 import skin.SkinRegistry;
 import skin.SnakeSkin;
+import util.FontManager;
 
 public class SkinSelectScreen extends JPanel {
 
@@ -56,8 +57,10 @@ public class SkinSelectScreen extends JPanel {
 		int h = getHeight();
 		
 		g2.setColor(Color.WHITE);
-		g2.setFont(new Font("Arial", Font.BOLD, 36));
-		g2.drawString("SELECT SKIN", w / 2 - 110, 80);
+		g2.setFont(FontManager.GAME_LARGE);
+		FontMetrics fm = g2.getFontMetrics();
+		String title = "SELECT SKIN";
+		g2.drawString(title, (w - fm.stringWidth(title)) / 2, 80);
 		
 		int cardW = 140;
 		int cardH = 160;
@@ -86,17 +89,17 @@ public class SkinSelectScreen extends JPanel {
 			drawSnakePreview(g2, skin, cardX + 10, cardY + 15, cardW - 20, 90);
 			
 			g2.setColor(isSelected ? skin.getHeadColor() : Color.WHITE);
-			g2.setFont(new Font("Arial", Font.BOLD, 14));
+			g2.setFont(FontManager.GAME);
 			g2.drawString(skin.getName(), cardX + 12, cardY + 125);
 			
 			if(isSelected) {
 				g2.setColor(skin.getHeadColor());
-				g2.setFont(new Font("Arial", Font.BOLD, 11));
+				g2.setFont(FontManager.GAME_SMALL);
 				g2.drawString("PRESS ENTER", cardX + 12, cardY + 148);
 			}
 		}
 		g2.setColor(Color.decode("#576574"));
-		g2.setFont(new Font("Arial", Font.PLAIN, 13));
+		g2.setFont(FontManager.GAME_SMALL);
 		g2.drawString("<- -> to browse   ENTER to confirm", w / 2 - 130, h - 30);
 	}
 	private void drawSnakePreview(Graphics2D g, SnakeSkin skin, int x, int y, int w, int h) {

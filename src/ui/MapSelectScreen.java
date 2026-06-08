@@ -3,6 +3,7 @@ package ui;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -14,6 +15,7 @@ import javax.swing.JPanel;
 import map.ClassicMap;
 import map.GameMap;
 import map.ObstacleMap;
+import util.FontManager;
 
 public class MapSelectScreen extends JPanel{
 	private final GameMap[] maps = {
@@ -68,11 +70,13 @@ public class MapSelectScreen extends JPanel{
 		int h = getHeight();
 		
 		g2.setColor(Color.WHITE);
-		g2.setFont(new Font("Arial", Font.BOLD, 36));
-		g2.drawString("SELECT MAP", w / 2 - 105, 80);
+		g2.setFont(FontManager.GAME_LARGE);
+		FontMetrics fm = g2.getFontMetrics();
+		String title = "SELECT MAP";
+		g2.drawString(title, (w - fm.stringWidth(title)) / 2, 80);
 		
-		int cardW = 200;
-		int cardH = 260;
+		int cardW = 240;
+		int cardH = 280;
 		int spacing = 40;
 		int totalW = maps.length * cardW + (maps.length - 1) * spacing;
 		int startX = (w - totalW) / 2;
@@ -92,24 +96,24 @@ public class MapSelectScreen extends JPanel{
 			drawMapPreview(g2, maps[i], cardX + 20, cardY + 20, cardW - 40, 140);
 			
 			g2.setColor(isSelected ? Color.decode("#2ed573") : Color.WHITE);
-			g2.setFont(new Font("Arial", Font.BOLD, 18));
+			g2.setFont(FontManager.GAME);
 			g2.drawString(maps[i].getName(), cardX + 20, cardY + 185);
 			
 			g2.setColor(Color.decode("#a4b0be"));
-			g2.setFont(new Font("Arial", Font.PLAIN, 12));
+			g2.setFont(FontManager.GAME_SMALL);
 			String desc = getDescription(maps[i]);
 			g2.drawString(desc, cardX + 20, cardY + 210);
 			
 			if(isSelected) {
 				g2.setColor(Color.decode("#2ed573"));
-				g2.setFont(new Font("Arial", Font.BOLD, 13));
+				g2.setFont(FontManager.GAME_SMALL);
 				g2.drawString("PRESS ENTER", cardX + 42, cardY + 245);
 				
 			}
 			
 		}
 		g2.setColor(Color.decode("#576574"));
-		g2.setFont(new Font("Arial", Font.PLAIN, 13));
+		g2.setFont(FontManager.GAME_SMALL);
 		int bx = w / 2 - 120;
 		int by = h - 70;
 		g2.setColor(powerUpsEnabled ? Color.decode("#2ed573") : Color.decode("#576574"));
@@ -120,7 +124,7 @@ public class MapSelectScreen extends JPanel{
 			g2.fillRoundRect(bx, by, 20, 20, 4, 4);
 		}
 		g2.setColor(Color.WHITE);
-		g2.setFont(new Font("Arial", Font.PLAIN, 13));
+		g2.setFont(FontManager.GAME_SMALL);
 		g2.drawString("Power-ups (press P to switch)", bx + 28, by + 15);
 		g2.drawString("<- -> to browse   ENTER to play", w / 2 - 115, h - 30);
 	}

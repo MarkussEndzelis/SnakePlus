@@ -26,6 +26,7 @@ import powerup.PowerUp;
 import score.HighScoremanager;
 import skin.SkinRegistry;
 import skin.SnakeSkin;
+import util.FontManager;
 
 public class GamePanel extends JPanel {
 	private Runnable onBackToMenu;
@@ -159,8 +160,8 @@ public class GamePanel extends JPanel {
 
 	private void drawHUD(Graphics2D g) {
 		g.setColor(Color.WHITE);
-		g.setFont(new Font("Arial", Font.BOLD, 16));
-		g.drawString("Score: " + state.getScore(), 10, 20);
+		g.setFont(FontManager.GAME);
+		g.drawString("Score: " + Integer.toString(state.getScore()), 10, 20);
 
 		if (state.getScoreMultiplier() > 1) {
 			g.setColor(Color.decode("#ffd32a"));
@@ -173,7 +174,7 @@ public class GamePanel extends JPanel {
 			g.setColor(pu.getColor());
 			g.fillRoundRect(10, barY, (int) (100 * pct), 8, 4, 4);
 			g.setColor(Color.WHITE);
-			g.setFont(new Font("Arial", Font.PLAIN, 10));
+			g.setFont(FontManager.GAME_SMALL);
 			g.drawString(pu.getName(), 115, barY + 8);
 			barY += 14;
 		}
@@ -207,23 +208,23 @@ public class GamePanel extends JPanel {
 		
 		if(newHighScore) {
 			g.setColor(Color.decode("#ffd32a"));
-			g.setFont(new Font("Arial", Font.BOLD, 16));
+			g.setFont(FontManager.GAME);
 			fm = g.getFontMetrics();
 			text = "NEW HIGH SCORE";
 			tx = (w - fm.stringWidth(text)) / 2;
 			g.drawString(text, tx, py + 38);
 		}
 		g.setColor(Color.WHITE);
-		g.setFont(new Font("Arial", Font.BOLD, 42));
+		g.setFont(FontManager.GAME_LARGE);
 		fm = g.getFontMetrics();
 		text = "GAME OVER";
 		tx = (w - fm.stringWidth(text)) / 2;
 		g.drawString(text, tx, py + (newHighScore ? 78 : 60));
 		
 		g.setColor(Color.decode("#2ed573"));
-		g.setFont(new Font("Arial", Font.BOLD, 28));
+		g.setFont(FontManager.GAME);
 		fm = g.getFontMetrics();
-		text = "Score: " + state.getScore();
+		text = "Score: " + Integer.toString(state.getScore());
 		tx = (w - fm.stringWidth(text)) / 2;
 		g.drawString(text, tx, py + (newHighScore ? 115 : 100));
 		
@@ -232,7 +233,7 @@ public class GamePanel extends JPanel {
 		g.drawLine(px + 20, py + 130, px + panelW - 20, py + 130);
 		
 		g.setColor(Color.decode("#a4b0be"));
-		g.setFont(new Font("Arial", Font.BOLD, 13));
+		g.setFont(FontManager.GAME_SMALL);
 		fm = g.getFontMetrics();
 		text = "TOP SCORES - " + state.getMap().getName().toUpperCase();
 		tx = (w - fm.stringWidth(text)) / 2;
@@ -242,7 +243,7 @@ public class GamePanel extends JPanel {
 		for(int i = 0; i < scores.size(); i++) {
 			boolean isNew = newHighScore && 1 == 0;
 			g.setColor(isNew ? Color.decode("#ffd32a") : Color.WHITE);
-			g.setFont(new Font("Arial", Font.BOLD, 14));
+			g.setFont(FontManager.GAME);
 			fm = g.getFontMetrics();
 			text = (i + 1) + ".  " + scores.get(i);
 			tx = (w - fm.stringWidth(text)) / 2;
@@ -253,7 +254,7 @@ public class GamePanel extends JPanel {
 		g.drawLine(px + 20, py + panelH - 45, px + panelW - 20, py + panelH - 45);
 		
 		g.setColor(Color.decode("#576574"));
-		g.setFont(new Font("Arial", Font.PLAIN, 12));
+		g.setFont(FontManager.GAME_SMALL);
 		fm = g.getFontMetrics();
 		text = "R - restart    M - main menu";
 		tx = (w - fm.stringWidth(text)) / 2;
@@ -285,7 +286,7 @@ public class GamePanel extends JPanel {
 			g.fillOval(p.x * TILE, p.y * TILE, TILE, TILE);
 
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("Arial", Font.BOLD, 11));
+			g.setFont(FontManager.GAME_SMALL);
 			String letter = String.valueOf(pu.getName().charAt(0));
 			g.drawString(letter, p.x * TILE + 7, p.y * TILE + 16);
 		}
