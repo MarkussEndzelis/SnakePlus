@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 import map.GameMap;
 import skin.SnakeSkin;
 import ui.GamePanel;
+import ui.MainMenuScreen;
 import ui.MapSelectScreen;
 import ui.SkinSelectScreen;
 
@@ -22,10 +23,12 @@ public class Main {
 			CardLayout cards = new CardLayout();
 			JPanel root = new JPanel(cards);
 			
+			final MainMenuScreen mainMenu = new MainMenuScreen();
 			MapSelectScreen mapSelect = new MapSelectScreen();
 			SkinSelectScreen skinSelect = new SkinSelectScreen();
 			GamePanel gamePanel = new GamePanel();
 			
+			root.add(mainMenu, "MAIN_MENU");
 			root.add(mapSelect, "MAP_SELECT");
 			root.add(skinSelect, "SKIN_SELECT");
 			root.add(gamePanel, "GAME");
@@ -33,6 +36,12 @@ public class Main {
 			final GameMap[] chosenMap = {
 				null	
 			};
+			
+			mainMenu.setOnPlay(() -> {
+				mainMenu.stopAnim();
+				cards.show(root, "MAP_SELECT");
+				mapSelect.requestFocusInWindow();
+			});
 			
 			mapSelect.setOnSelect(() -> {
 				chosenMap[0] = mapSelect.getSelectedMap();
@@ -50,15 +59,20 @@ public class Main {
 			});
 			
 			gamePanel.setOnBackToMenu(() -> {
-				cards.show(root, "MAP_SELECT");
+				mainMenu.startAnim();
+				cards.show(root, "MAIN_MENU");
 				mapSelect.requestFocusInWindow();
 			});
 			frame.add(root);
 			frame.pack();
 			frame.setLocationRelativeTo(null);
+			
+			cards.show(root, "MAIN_MENU");
+			mainMenu.requestFocusInWindow();
+			
 			frame.setVisible(true);
 			
-			mapSelect.requestFocusInWindow();
+			
 		});
 }
 }
