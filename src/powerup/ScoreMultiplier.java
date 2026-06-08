@@ -26,6 +26,6 @@ public class ScoreMultiplier extends PowerUp {
 	}
 	@Override
 	public Color getColor() {
-		return Color.decode("ffd32a");
+		return Color.decode("#ffd32a");
 	}
 }

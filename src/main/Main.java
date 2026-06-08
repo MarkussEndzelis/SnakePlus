@@ -7,8 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import map.GameMap;
+import skin.SnakeSkin;
 import ui.GamePanel;
 import ui.MapSelectScreen;
+import ui.SkinSelectScreen;
 
 public class Main {
 	public static void main(String[] args) {
@@ -21,14 +23,28 @@ public class Main {
 			JPanel root = new JPanel(cards);
 			
 			MapSelectScreen mapSelect = new MapSelectScreen();
+			SkinSelectScreen skinSelect = new SkinSelectScreen();
 			GamePanel gamePanel = new GamePanel();
 			
 			root.add(mapSelect, "MAP_SELECT");
+			root.add(skinSelect, "SKIN_SELECT");
 			root.add(gamePanel, "GAME");
 			
+			final GameMap[] chosenMap = {
+				null	
+			};
+			
 			mapSelect.setOnSelect(() -> {
-				GameMap chosen = mapSelect.getSelectedMap();
-				gamePanel.startGame(chosen);
+				chosenMap[0] = mapSelect.getSelectedMap();
+				cards.show(root, "SKIN_SELECT");
+				skinSelect.requestFocusInWindow();
+			});
+			
+			skinSelect.setOnSelect(() -> {
+				SnakeSkin chosenSkin = skinSelect.getSelectedSkin();
+				gamePanel.setSkin(chosenSkin);
+				gamePanel.setPowerUpsEnabled(mapSelect.isPowerUpsEnabled());
+				gamePanel.startGame(chosenMap[0]);
 				cards.show(root, "GAME");
 				gamePanel.requestFocusInWindow();
 			});

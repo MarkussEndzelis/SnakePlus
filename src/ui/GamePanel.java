@@ -20,9 +20,21 @@ import map.ClassicMap;
 import map.GameMap;
 import model.Snake;
 import powerup.PowerUp;
+import skin.SkinRegistry;
+import skin.SnakeSkin;
 
 public class GamePanel extends JPanel {
 	private Runnable onBackToMenu;
+	private SnakeSkin currentSkin = SkinRegistry.ALL[0];
+	private boolean powerUpsEnabled = true;
+
+	public void setPowerUpsEnabled(boolean enabled) {
+		powerUpsEnabled = enabled;
+	}
+
+	public void setSkin(SnakeSkin skin) {
+		this.currentSkin = skin;
+	}
 
 	public void setOnBackToMenu(Runnable r) {
 		onBackToMenu = r;
@@ -68,7 +80,7 @@ public class GamePanel extends JPanel {
 		if (timer != null) {
 			timer.stop();
 		}
-		state = new GameState(map);
+		state = new GameState(map, powerUpsEnabled);
 		timer = new Timer(state.getTickInterval(), e -> {
 			state.update();
 			timer.setDelay(state.getTickInterval());
@@ -125,11 +137,11 @@ public class GamePanel extends JPanel {
 
 		for (Point p : body) {
 			if (isHead) {
-				g.setColor(Color.decode("#2ed573"));
+				g.setColor(currentSkin.getHeadColor());
 				g.fillRoundRect(p.x * TILE + 1, p.y * TILE + 1, TILE - 2, TILE - 2, 8, 8);
 				isHead = false;
 			} else {
-				g.setColor(Color.decode("#7bed9f"));
+				g.setColor(currentSkin.getBodyColor());
 				g.fillRoundRect(p.x * TILE + 2, p.y * TILE + 2, TILE - 4, TILE - 4, 6, 6);
 			}
 		}
@@ -142,7 +154,7 @@ public class GamePanel extends JPanel {
 		g.drawString("Score: " + state.getScore(), 10, 20);
 
 		if (state.getScoreMultiplier() > 1) {
-			g.setColor(Color.decode("ffd32a"));
+			g.setColor(Color.decode("#ffd32a"));
 			g.drawString("x" + state.getScoreMultiplier(), 120, 20);
 		}
 

@@ -37,12 +37,14 @@ public class GameState {
 	private final List<PowerUpPickup> pickups = new ArrayList<>();
 	private final List<PowerUp> activeEffects = new ArrayList<>();
 	private int foodEatenSinceLastPowerUp = 0;
+	private final boolean powerUpsEnabled;
 
 	private static final PowerUp[] POOL = { new SpeedBoost(), new SlowDown(), new ScoreMultiplier(), new ShrinkSnake(),
 			new FreezeTime(), new GhostMode(), new Magnet() };
 
-	public GameState(GameMap map) {
+	public GameState(GameMap map, boolean powerUpsEnabled) {
 		this.map = map;
+		this.powerUpsEnabled = powerUpsEnabled;
 		snake = new Snake(COLS / 2, ROWS / 2);
 		spawnFood();
 	}
@@ -129,6 +131,9 @@ public class GameState {
 		food = p;
 	}
 	private void spawnPowerUp() {
+		if(!powerUpsEnabled) {
+			return;
+		}
 		if(pickups.size() >= 2) {
 			return;
 		}

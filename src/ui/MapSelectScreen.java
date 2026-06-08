@@ -22,6 +22,7 @@ public class MapSelectScreen extends JPanel{
 	};
 	private int selected = 0;
 	private Runnable onSelect;
+	private boolean powerUpsEnabled = true;
 	
 	public MapSelectScreen() {
 		setBackground(Color.decode("#1a1a2e"));
@@ -41,6 +42,10 @@ public class MapSelectScreen extends JPanel{
 				if(e.getKeyCode() == KeyEvent.VK_ENTER && onSelect != null) {
 					onSelect.run();
 				}
+				if(e.getKeyCode() == KeyEvent.VK_P) {
+					powerUpsEnabled = !powerUpsEnabled;
+					repaint();
+				}
 			}
 		});
 	}
@@ -49,6 +54,9 @@ public class MapSelectScreen extends JPanel{
 	}
 	public GameMap getSelectedMap() {
 		return maps[selected];
+	}
+	public boolean isPowerUpsEnabled() {
+		return powerUpsEnabled;
 	}
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -96,10 +104,24 @@ public class MapSelectScreen extends JPanel{
 				g2.setColor(Color.decode("#2ed573"));
 				g2.setFont(new Font("Arial", Font.BOLD, 13));
 				g2.drawString("PRESS ENTER", cardX + 42, cardY + 245);
+				
 			}
+			
 		}
 		g2.setColor(Color.decode("#576574"));
 		g2.setFont(new Font("Arial", Font.PLAIN, 13));
+		int bx = w / 2 - 120;
+		int by = h - 70;
+		g2.setColor(powerUpsEnabled ? Color.decode("#2ed573") : Color.decode("#576574"));
+		g2.setStroke(new BasicStroke(2));
+		g2.drawRoundRect(bx, by, 20, 20, 4, 4);
+		if(powerUpsEnabled) {
+			g2.setColor(Color.decode("#2ed573"));
+			g2.fillRoundRect(bx, by, 20, 20, 4, 4);
+		}
+		g2.setColor(Color.WHITE);
+		g2.setFont(new Font("Arial", Font.PLAIN, 13));
+		g2.drawString("Power-ups (press P to switch)", bx + 28, by + 15);
 		g2.drawString("<- -> to browse   ENTER to play", w / 2 - 115, h - 30);
 	}
 	
