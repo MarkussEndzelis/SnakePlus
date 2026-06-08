@@ -32,7 +32,6 @@ public class MainMenuScreen extends JPanel {
 		
 		animTimer = new Timer(50, e -> {
 			animTick++;
-			snakeOffest = (snakeOffest + 1) % 30;
 			repaint();
 		});
 		animTimer.start();
@@ -80,7 +79,8 @@ public class MainMenuScreen extends JPanel {
 		int h = getHeight();
 		
 		drawBackground(g2, w, h);
-		drawAnimatedSnake(g2, w, h);
+		drawLogoSnake(g2, w, h);
+		//drawAnimatedSnake(g2, w, h);
 		drawTitle(g2, w, h);
 		drawPlayButton(g2, w, h);
 		drawSubtitle(g2, w, h);
@@ -95,24 +95,59 @@ public class MainMenuScreen extends JPanel {
 			g.drawLine(0, y, w, y);
 		}
 	}
-	private void drawAnimatedSnake(Graphics2D g, int w, int h) {
-		int tile = 18;
-		int[] snake = new int[16];
-		for(int i = 0; i < snake.length; i++) {
-			snake[i] = i;
-		}
-		int baseY = h / 4;
-		for(int i = snake.length - 1; i >= 0; i--) {
-			int x = (w / 2 - snake.length * tile / 2) + (i + snakeOffest) * tile % (w - tile * 2);
-			int y = baseY + (int)(Math.sin((i + animTick * 0.15)) * 18);
+//	private void drawAnimatedSnake(Graphics2D g, int w, int h) {
+//		int tile = 18;
+//		int len = 16;
+//		int baseY = h / 4;
+//		int totalWidth = w + len * tile;
+//		
+//		for(int i = len - 1; i >= 0; i--) {
+//			int rawX = w - ((snakeOffest * 3 + i * tile) % totalWidth);
+//			int y = baseY + (int)(Math.sin((i * 0.5) + animTick * 0.15) * 18);
+//			
+//			if(rawX < -tile || rawX > w + tile) {
+//				continue;
+//			}
+//			if(i == 0) {
+//				g.setColor(Color.decode("#2ed573"));
+//			}else {
+//				float fade = 1f - (i / (float) len) * 0.5f;
+//				g.setColor(new Color(0x7b, 0xed, 0x9f, (int)(fade * 180)));
+//			}
+//			g.fillRoundRect(rawX, y, tile - 2, tile - 2, 6, 6);
+//		}
+//		
+//		}
+	
+	private void drawLogoSnake(Graphics2D g, int w, int h) {
+		int tile = 20;
+		int startX = (w / 2) - (6 * tile);
+		int startY = h / 4 - tile * 3;
+		
+		int[][] shape = {
+				{0,0},{1,0},{2,0},{3,0},{4,0},{5,0},{6,0},{7,0},{8,0},{9,0},{10,0},{11,0},
+				{11,1},{11,2},
+				{10,2},{9,2},{8,2},{7,2},{6,2},{5,2},{4,2},{3,2},{2,2},{1,2},{0,2},
+				{0,3},{0,4},
+				{1,4},{2,4},{3,4},{4,4},{5,4},{6,4},{7,4},{8,4},{9,4},{10,4},{11,4}
+		};
+		for(int i = 0; i < shape.length; i++) {
+			int px = startX + shape[i][0] * tile;
+			int py = startY + shape[i][1] * tile;
 			
 			if(i == 0) {
 				g.setColor(Color.decode("#2ed573"));
+				g.fillRoundRect(px, py, tile - 2, tile - 2, 7, 7);
+				
+				g.setColor(Color.decode("#0f0f1a"));
+				g.fillOval(px + 4, py + 4, 4, 4);
+				g.fillOval(px + 11, py + 4, 4, 4);
 			}else {
-				float fade = 1f - (i / (float) snake.length) * 0.5f;
-				g.setColor(new Color(0x7b, 0xed, 0x9f, (int)(fade * 180)));
+				float fade = 1f - (i / (float) shape.length) * 0.4f;
+				int green = (int)(0xed * fade);
+				g.setColor(new Color(0x7b, green, 0x9f, (int)(fade * 220)));
+				g.fillRoundRect(px + 1, py + 1, tile - 4 , tile - 4, 5, 5);
 			}
-			g.fillRoundRect(x, y, tile - 2, tile - 2, 6, 6);
 		}
 	}
 	private void drawTitle(Graphics2D g, int w, int h) {
@@ -124,7 +159,7 @@ public class MainMenuScreen extends JPanel {
 		int ty = h / 2 - 60;
 		
 		g.setColor(new Color(0x2e, 0xd5, 0x73, 40));
-		g.drawString(title, tx + 2, ty + 2);
+		g.drawString(title, tx , ty + 2);
 		
 		float pulse = (float)(Math.sin(animTick * 0.05) * 0.05 + 0.05);
 		Color titleColor = blend(Color.decode("#2ed573"), Color.decode("#7bed9f"), pulse);

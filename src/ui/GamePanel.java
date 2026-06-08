@@ -1,9 +1,11 @@
 package ui;
 
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -178,37 +180,84 @@ public class GamePanel extends JPanel {
 	}
 
 	private void drawGameOver(Graphics2D g) {
-		g.setColor(new Color(0, 0, 0, 160));
-		g.fillRect(0, 0, getWidth(), getHeight());
 		
-		int cx = getWidth() / 2;
-		int cy = getHeight() / 2;
+		
+		int w = getWidth();
+		int h = getHeight();
+		
+		if(w <= 0 || h <= 0) {
+			return;
+		}
+		g.setColor(new Color(0, 0, 0, 180));
+		g.fillRect(0, 0, w, h);
+		
+		int panelW = 340;
+		int panelH = 360;
+		int px = (w - panelW) / 2;
+		int py = (h - panelH) / 2;
+		g.setColor(Color.decode("#1e2030"));
+		g.fillRoundRect(px, py, panelW, panelH, 20, 20);
+		g.setColor(Color.decode("#2f3542"));
+		g.setStroke(new BasicStroke(2));
+		g.drawRoundRect(px, py, panelW, panelH, 20, 20);
+		
+		FontMetrics fm;
+		String text;
+		int tx;
 		
 		if(newHighScore) {
 			g.setColor(Color.decode("#ffd32a"));
-			g.setFont(new Font("Arial", Font.BOLD, 22));
-			g.drawString("NEW HIGH SCORE!", cx - 105, cy - 60);
+			g.setFont(new Font("Arial", Font.BOLD, 16));
+			fm = g.getFontMetrics();
+			text = "NEW HIGH SCORE";
+			tx = (w - fm.stringWidth(text)) / 2;
+			g.drawString(text, tx, py + 38);
 		}
 		g.setColor(Color.WHITE);
-		g.setFont(new Font("Arial", Font.BOLD, 36));
-		g.drawString("GAME OVER", getWidth() / 2 - 95, getHeight() / 2 - 10);
-		g.setFont(new Font("Arial", Font.PLAIN, 16));
-		g.drawString("Score: " + state.getScore(), cx - 40, cy + 15);
-		g.setFont(new Font("Arial", Font.PLAIN, 16));
+		g.setFont(new Font("Arial", Font.BOLD, 42));
+		fm = g.getFontMetrics();
+		text = "GAME OVER";
+		tx = (w - fm.stringWidth(text)) / 2;
+		g.drawString(text, tx, py + (newHighScore ? 78 : 60));
+		
+		g.setColor(Color.decode("#2ed573"));
+		g.setFont(new Font("Arial", Font.BOLD, 28));
+		fm = g.getFontMetrics();
+		text = "Score: " + state.getScore();
+		tx = (w - fm.stringWidth(text)) / 2;
+		g.drawString(text, tx, py + (newHighScore ? 115 : 100));
+		
+		g.setColor(Color.decode("#2f3542"));
+		g.setStroke(new BasicStroke(1));
+		g.drawLine(px + 20, py + 130, px + panelW - 20, py + 130);
+		
 		g.setColor(Color.decode("#a4b0be"));
-		g.drawString("TOP SCORES - " + state.getMap().getName(), cx - 90, cy + 45);
+		g.setFont(new Font("Arial", Font.BOLD, 13));
+		fm = g.getFontMetrics();
+		text = "TOP SCORES - " + state.getMap().getName().toUpperCase();
+		tx = (w - fm.stringWidth(text)) / 2;
+		g.drawString(text, tx, py + 152);
 		
 		List<Integer> scores = HighScoremanager.getScores(state.getMap().getName());
-		g.setFont(new Font("Arial", Font.PLAIN, 13));
 		for(int i = 0; i < scores.size(); i++) {
-			boolean isThis = scores.get(i) == state.getScore() && newHighScore && i == 0;
-			g.setColor(isThis ? Color.decode("#ffd32a") : Color.WHITE);
-			g.drawString((i + 1) + ".  " + scores.get(i), cx - 30, cy + 65 + i * 18);
+			boolean isNew = newHighScore && 1 == 0;
+			g.setColor(isNew ? Color.decode("#ffd32a") : Color.WHITE);
+			g.setFont(new Font("Arial", Font.BOLD, 14));
+			fm = g.getFontMetrics();
+			text = (i + 1) + ".  " + scores.get(i);
+			tx = (w - fm.stringWidth(text)) / 2;
+			g.drawString(text, tx, py + 175 + i * 22);
 		}
 		
+		g.setColor(Color.decode("#2f3542"));
+		g.drawLine(px + 20, py + panelH - 45, px + panelW - 20, py + panelH - 45);
+		
 		g.setColor(Color.decode("#576574"));
-		g.setFont(new Font("Arial", Font.PLAIN, 13));
-		g.drawString("R - restart   M - map select", cx - 100, cy + 165);
+		g.setFont(new Font("Arial", Font.PLAIN, 12));
+		fm = g.getFontMetrics();
+		text = "R - restart    M - main menu";
+		tx = (w - fm.stringWidth(text)) / 2;
+		g.drawString(text, tx, py + panelH - 20);
 
 	}
 
