@@ -16,6 +16,8 @@ import map.ClassicMap;
 import map.GameMap;
 import map.ObstacleMap;
 import util.FontManager;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MapSelectScreen extends JPanel{
 	private final GameMap[] maps = {
@@ -45,6 +47,37 @@ public class MapSelectScreen extends JPanel{
 					onSelect.run();
 				}
 				if(e.getKeyCode() == KeyEvent.VK_P) {
+					powerUpsEnabled = !powerUpsEnabled;
+					repaint();
+				}
+			}
+		});
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int w = getWidth();
+				int h = getHeight();
+				int cardW = 240;
+				int cardH = 280;
+				int spacing = 40;
+				int totalW = maps.length * cardW + (maps.length - 1) * spacing;
+				int startX = (w - totalW) / 2;
+				int cardY = h / 2 - cardH / 2;
+				
+				for(int i = 0; i < maps.length; i++) {
+					int cardX = startX + i * (cardW + spacing);
+					if(e.getX() >= cardX && e.getX() <= cardX + cardW && e.getY() >= cardY && e.getY() <= cardY + cardH) {
+						 selected = i;
+						 if(onSelect != null) {
+							 onSelect.run();
+							 return;
+						 }
+					}
+					
+				}
+				int bx = w / 2 - 120;
+				int by = h - 70;
+				if(e.getX() >= bx && e.getX() <= bx + 240 && e.getY() >= by - 5 && e.getY() <= by + 25) {
 					powerUpsEnabled = !powerUpsEnabled;
 					repaint();
 				}
@@ -89,8 +122,8 @@ public class MapSelectScreen extends JPanel{
 			g2.setColor(isSelected ? Color.decode("#2f3542") : Color.decode("#1e2030"));
 			g2.fillRoundRect(cardX, cardY, cardW, cardH, 16, 16);
 			
-			g2.setColor(isSelected ? Color.decode("#2ed573") : Color.decode("#576574"));
-			g2.setStroke(new BasicStroke(isSelected ? 3 : 1));
+			g.setColor(Color.decode("#576574"));
+			g2.setStroke(new BasicStroke(1));
 			g2.drawRoundRect(cardX, cardY, cardW, cardH, 16, 16);
 			
 			drawMapPreview(g2, maps[i], cardX + 20, cardY + 20, cardW - 40, 140);
@@ -104,12 +137,6 @@ public class MapSelectScreen extends JPanel{
 			String desc = getDescription(maps[i]);
 			g2.drawString(desc, cardX + 20, cardY + 210);
 			
-			if(isSelected) {
-				g2.setColor(Color.decode("#2ed573"));
-				g2.setFont(FontManager.GAME_SMALL);
-				g2.drawString("PRESS ENTER", cardX + 42, cardY + 245);
-				
-			}
 			
 		}
 		g2.setColor(Color.decode("#576574"));
@@ -126,7 +153,6 @@ public class MapSelectScreen extends JPanel{
 		g2.setColor(Color.WHITE);
 		g2.setFont(FontManager.GAME_SMALL);
 		g2.drawString("Power-ups (press P to switch)", bx + 28, by + 15);
-		g2.drawString("<- -> to browse   ENTER to play", w / 2 - 115, h - 30);
 	}
 	
 	private void drawMapPreview(Graphics2D g, GameMap map, int x, int y, int w, int h) {

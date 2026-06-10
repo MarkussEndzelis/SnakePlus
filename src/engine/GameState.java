@@ -33,6 +33,7 @@ public class GameState {
 	private int tickInterval = 120;
 	private boolean frozen = false;
 	private boolean ghost = false;
+	private int coinsEarned = 0;
 
 	private final List<PowerUpPickup> pickups = new ArrayList<>();
 	private final List<PowerUp> activeEffects = new ArrayList<>();
@@ -96,6 +97,7 @@ public class GameState {
 		if(head.equals(food)) {
 			snake.grow();
 			score += 10 * scoreMultiplier;
+			coinsEarned++;
 			foodEatenSinceLastPowerUp++;
 			if(foodEatenSinceLastPowerUp >= 3) {
 				spawnPowerUp();
@@ -146,7 +148,13 @@ public class GameState {
 		}while(occupied.contains(p) && tries < 100);
 		
 		PowerUp pu = POOL[rng.nextInt(POOL.length)];
-		pu = freshPowerUp(rng.nextInt(POOL.length));
+		boolean hasObstacles = !map.getMovingObstacles().isEmpty();
+		int range = hasObstacles ? 7 : 6;
+		int idx;
+		do {
+			idx = rng.nextInt(range);
+		}while(!hasObstacles && idx == 4);
+		pu = freshPowerUp(idx);
 		pickups.add(new PowerUpPickup(pu, p, 150));
 	}
 	private PowerUp freshPowerUp(int index) {
@@ -237,6 +245,9 @@ public class GameState {
 	}
 	public List<PowerUp> getActiveEffects(){
 		return activeEffects;
+	}
+	public int getCoinsEarned() {
+		return coinsEarned;
 	}
 
 }

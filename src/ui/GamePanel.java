@@ -15,6 +15,7 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import engine.Direction;
@@ -23,6 +24,7 @@ import map.ClassicMap;
 import map.GameMap;
 import model.Snake;
 import powerup.PowerUp;
+import score.CoinManager;
 import score.HighScoremanager;
 import skin.SkinRegistry;
 import skin.SnakeSkin;
@@ -70,7 +72,7 @@ public class GamePanel extends JPanel {
 					state.getSnake().setNextDirection(d);
 				}
 				if (e.getKeyCode() == KeyEvent.VK_R && state.isGameOver()) {
-					startGame(new ClassicMap());
+					startGame(state.getMap());
 				}
 				if (e.getKeyCode() == KeyEvent.VK_M && state.isGameOver()) {
 					if (onBackToMenu != null) {
@@ -79,7 +81,34 @@ public class GamePanel extends JPanel {
 				}
 			}
 		});
-		startGame(new ClassicMap());
+		addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				if(!state.isGameOver()) {
+					return;
+				}
+				int w = getWidth();
+				int h = getHeight();
+				int panelW = 340;
+				int panelH = 360;
+				int px = (w - panelW) / 2;
+				int py = (h - panelH) / 2;
+				int btnW = 130;
+				int btnH = 36;
+				int btnY = py + panelH - 50;
+				int restartX = px + 20;
+				int menuX = px + panelW - 20 - btnW;
+				if(e.getX() >= restartX && e.getX() <= restartX + btnW && e.getY() >= btnY && e.getY() <= btnY + btnH) {
+					startGame(state.getMap());
+					SwingUtilities.invokeLater(() -> requestFocusInWindow());
+				}
+				if(e.getX() >= menuX && e.getX() <= menuX + btnW && e.getY() >= btnY && e.getY() <= btnY + btnH) {
+					if(onBackToMenu != null) {
+						onBackToMenu.run();
+					}
+				}
+			}
+		});
 	}
 
 	public void startGame(GameMap map) {
@@ -94,6 +123,7 @@ public class GamePanel extends JPanel {
 			repaint();
 			if(state.isGameOver()) {
 				((Timer) e.getSource()).stop();
+				CoinManager.addCoins(state.getCoinsEarned());
 				newHighScore = HighScoremanager.isHighScore(state.getMap().getName(), state.getScore());
 				HighScoremanager.saveScore(state.getMap().getName(), state.getScore());
 			}
@@ -122,10 +152,10 @@ public class GamePanel extends JPanel {
 
 	private void drawGrid(Graphics2D g) {
 		g.setColor(new Color(255, 255, 255, 12));
-		for (int x = 0; x <= GameState.COLS; x++) {
+		for (int x = 0; x < GameState.COLS; x++) {
 			g.drawLine(x * TILE, 0, x * TILE, GameState.ROWS * TILE);
 		}
-		for (int y = 0; y <= GameState.ROWS; y++) {
+		for (int y = 0; y < GameState.ROWS; y++) {
 			g.drawLine(0, y * TILE, GameState.COLS * TILE, y * TILE);
 		}
 	}
@@ -159,6 +189,7 @@ public class GamePanel extends JPanel {
 	}
 
 	private void drawHUD(Graphics2D g) {
+		FontMetrics fm = g.getFontMetrics();
 		g.setColor(Color.WHITE);
 		g.setFont(FontManager.GAME);
 		g.drawString("Score: " + Integer.toString(state.getScore()), 10, 20);
@@ -178,6 +209,31 @@ public class GamePanel extends JPanel {
 			g.drawString(pu.getName(), 115, barY + 8);
 			barY += 14;
 		}
+		int barH = 30;
+		int bottomY = GameState.ROWS * TILE;
+		g.setColor(Color.decode("#0d0d1a"));
+		g.fillRect(0, bottomY, getWidth(), getHeight() - bottomY);
+		g.setColor(new Color(255, 255, 255, 20));
+		g.drawLine(0, bottomY, getWidth(), bottomY);
+		
+		g.setFont(FontManager.GAME);
+		fm = g.getFontMetrics();
+		g.setColor(Color.decode("#576574"));
+		String mapName = state.getMap().getName().toUpperCase();
+		g.drawString(mapName, 10, bottomY + 20);
+		
+		String skinName = currentSkin.getName().toUpperCase();
+		g.setColor(currentSkin.getHeadColor());
+		g.drawString(skinName, getWidth() - fm.stringWidth(skinName) - 10, bottomY + 20);
+		String lengthStr = "LENGTH :" + state.getSnake().getLength();
+		g.setColor(Color.WHITE);
+		g.drawString(lengthStr, getWidth() / 2 - fm.stringWidth(lengthStr) / 2, bottomY + 20);
+		
+		String coinsStr = "+" + state.getCoinsEarned() + "c";
+		g.setColor(Color.decode("#ffd700"));
+		int coinsX = getWidth() / 2 + 80;
+		g.drawString(coinsStr, coinsX, bottomY + 20);
+		
 	}
 
 	private void drawGameOver(Graphics2D g) {
@@ -253,12 +309,25 @@ public class GamePanel extends JPanel {
 		g.setColor(Color.decode("#2f3542"));
 		g.drawLine(px + 20, py + panelH - 45, px + panelW - 20, py + panelH - 45);
 		
-		g.setColor(Color.decode("#576574"));
+		int btnW = 130;
+		int btnH = 36;
+		int btnY = py + panelH - 50;
+		int restartX = px + 20;
+		int menuX = px + panelW - 20 - btnW;
+		
+		g.setColor(Color.decode("#2ed573"));
+		g.fillRoundRect(restartX, btnY, btnW, btnH, 10, 10);
+		g.setColor(Color.decode("#0f0f1a"));
 		g.setFont(FontManager.GAME_SMALL);
 		fm = g.getFontMetrics();
-		text = "R - restart    M - main menu";
-		tx = (w - fm.stringWidth(text)) / 2;
-		g.drawString(text, tx, py + panelH - 20);
+		text = "RESTART";
+		g.drawString(text, restartX + (btnW - fm.stringWidth(text)) / 2, btnY + (btnH + fm.getAscent() - fm.getDescent()) / 2);
+		
+		g.setColor(Color.decode("#576574"));
+		g.fillRoundRect(menuX, btnY, btnW, btnH, 10, 10);
+		g.setColor(Color.WHITE);
+		text = "MAIN MENU";
+		g.drawString(text, menuX + (btnW - fm.stringWidth(text)) / 2, btnY + (btnH + fm.getAscent() - fm.getDescent()) / 2);
 
 	}
 

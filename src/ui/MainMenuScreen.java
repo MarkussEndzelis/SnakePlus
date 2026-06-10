@@ -23,13 +23,15 @@ public class MainMenuScreen extends JPanel {
 	private Runnable onPlay;
 	private int animTick = 0;
 	private Timer animTimer;
+	private Runnable onShop;
+	private Runnable onSkins;
 	
 	private int snakeOffest = 0;
 	
 	public MainMenuScreen() {
 		setBackground(Color.decode("#0f0f1a"));
 		setFocusable(true);
-		setPreferredSize(new Dimension(GameState.COLS * GamePanel.TILE, GameState.ROWS * GamePanel.TILE));
+		setPreferredSize(new Dimension(GameState.COLS * GamePanel.TILE, GameState.ROWS * GamePanel.TILE + 80));
 		
 		animTimer = new Timer(50, e -> {
 			animTick++;
@@ -45,20 +47,40 @@ public class MainMenuScreen extends JPanel {
 						onPlay.run();
 					}
 				}
+				if(e.getKeyCode() == KeyEvent.VK_S) {
+					if(onShop != null) {
+						onShop.run();
+					}
+				}
 			}
 		});
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int bx = getWidth() / 2 - 100;
-				int by = getHeight() / 2 + 20;
+				int by = getHeight() / 2 - 30;
 				if(e.getX() >= bx && e.getX() <= bx + 200 &&e.getY() >= by && e.getY() <= by + 50) {
 					if(onPlay != null) {
 						onPlay.run();
 					}
 				}
+				int sy = by + 54;
+				if(e.getX() >= bx && e.getX() <= bx + 200 && e.getY() >= sy && e.getY() <= sy + 50) {
+					if(onShop != null) {
+						onShop.run();
+					}
+				}
+				int skinsY = sy + 50 + 16;
+				if(e.getX() >= bx && e.getX() <= bx + 200 && e.getY() >= skinsY && e.getY() <= skinsY + 50) {
+					if(onSkins != null) {
+						onSkins.run();
+					}
+				}
 			}
 		});
+	}
+	public void setOnSkins(Runnable onSkins) {
+		this.onSkins = onSkins;
 	}
 	public void setOnPlay(Runnable onPlay) {
 		this.onPlay = onPlay;
@@ -83,7 +105,7 @@ public class MainMenuScreen extends JPanel {
 		drawLogoSnake(g2, w, h);
 		//drawAnimatedSnake(g2, w, h);
 		drawTitle(g2, w, h);
-		drawPlayButton(g2, w, h);
+		drawButtons(g2, w, h);
 		drawSubtitle(g2, w, h);
 	}
 	private void drawBackground(Graphics2D g, int w, int h) {
@@ -157,7 +179,7 @@ public class MainMenuScreen extends JPanel {
 		FontMetrics fm = g.getFontMetrics();
 		String title = "SNAKE+";
 		int tx = (w - fm.stringWidth(title)) / 2;
-		int ty = h / 2 - 60;
+		int ty = h / 2 - 70;
 		
 		g.setColor(new Color(0x2e, 0xd5, 0x73, 40));
 		g.drawString(title, tx , ty + 2);
@@ -168,38 +190,40 @@ public class MainMenuScreen extends JPanel {
 		g.drawString(title, tx, ty);
 		
 	}
-	private void drawPlayButton(Graphics2D g, int w, int h) {
+	private void drawButtons(Graphics2D g, int w, int h) {
 		int bw = 200;
-		int bh = 50;
+		int bh = 44;
 		int bx = (w - bw) / 2;
-		int by = h / 2 + 20;
-		
-		g.setColor(new Color(0x2e, 0xd5, 0x73, 40));
-		g.fillRoundRect(bx - 4, by - 4, bw + 8, bh + 8, 18, 18);
+		int by = h / 2 - 30;
 		
 		g.setColor(Color.decode("#2ed573"));
 		g.fillRoundRect(bx, by, bw, bh, 14, 14);
 		
 		g.setColor(Color.decode("#0f0f1a"));
-		Font btnFont = FontManager.GAME;
-		g.setFont(btnFont);
+		g.setFont(FontManager.GAME);
+		
 		FontMetrics fm = g.getFontMetrics();
 		String label = "PLAY";
-		int tx = bx + (bw - fm.stringWidth(label)) / 2;
-		int ty = by + (bh + fm.getAscent() - fm.getDescent()) / 2;
-		g.drawString(label, tx, ty);
+		g.drawString(label, bx + (bw - fm.stringWidth(label)) / 2, by + (bh + fm.getAscent() - fm.getDescent()) / 2);
+		
+		int sy = by + bh + 10;
+		g.setColor(Color.decode("#ffd700"));
+		g.fillRoundRect(bx, sy, bw, bh, 14, 14);
+		g.setColor(Color.decode("#0f0f1a"));
+		label = "SHOP";
+		g.drawString(label, bx + (bw - fm.stringWidth(label)) / 2, sy + (bh + fm.getAscent() - fm.getDescent()) / 2);
+		
+		int skinsY = sy + bh + 10;
+		g.setColor(Color.decode("#00cfff"));
+		g.fillRoundRect(bx, skinsY, bw, bh, 14, 14);
+		g.setColor(Color.decode("#0f0f1a"));
+		label = "SKINS";
+		g.drawString(label, bx + (bw - fm.stringWidth(label)) / 2, skinsY + (bh + fm.getAscent() - fm.getDescent()) / 2);
 	}
 	private void drawSubtitle(Graphics2D g, int w, int h) {
-		String hint = "Click ENTER / SPACE / PLAY to start";
-		Font f = FontManager.GAME_SMALL;
-		g.setFont(f);
-		FontMetrics fm = g.getFontMetrics();
-		g.setColor(Color.decode("#576574"));
-		g.drawString(hint, (w - fm.stringWidth(hint)) / 2, h / 2 + 100);
-		
 		String ver = "v1.0 Snake+";
 		g.setFont(FontManager.GAME_SMALL);
-		fm = g.getFontMetrics();
+		FontMetrics fm = g.getFontMetrics();
 		g.setColor(new Color(255, 255, 255, 40));
 		g.drawString(ver, (w - fm.stringWidth(ver)) / 2, h - 15);
 	}
@@ -213,5 +237,8 @@ public class MainMenuScreen extends JPanel {
 	public void addNotify() {
 		super.addNotify();
 		requestFocusInWindow();
+	}
+	public void setOnShop(Runnable onShop) {
+		this.onShop = onShop;
 	}
 }

@@ -8,11 +8,13 @@ public class SnakeSkin {
 	private final Color headColor;
 	private final Color bodyColor;
 	private final Color outlineColor;
-	public SnakeSkin(String name, Color headColor, Color bodyColor, Color outlineColor) {
+	private final int price;
+	public SnakeSkin(String name, Color headColor, Color bodyColor, Color outlineColor, int price) {
 		this.name = name;
 		this.headColor = headColor;
 		this.bodyColor = bodyColor;
 		this.outlineColor = outlineColor;
+		this.price = price;
 	}
 	public String getName() {
 		return name;
@@ -25,6 +27,9 @@ public class SnakeSkin {
 	}
 	public Color getOutlineColor() {
 		return outlineColor;
+	}
+	public int getPrice() {
+		return price;
 	}
 	
 	
