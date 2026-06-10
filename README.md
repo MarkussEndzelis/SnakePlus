@@ -24,7 +24,7 @@ Earn coins by collecting apples and purchase skins.
 The goal is to collect apples and get as long as possible.
 
 ## How to download
-1. Download the zip file
+1. Download the zip file from releases
 2. Extract/unzip the folder anywhere on your PC
 3. Open the extracted folder and double click SnakePlus.exe to play
 
