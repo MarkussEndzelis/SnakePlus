@@ -32,10 +32,12 @@ If Windows SmartScreen blocks it, click "More info" then "Run anyway".
 
 ## Tech stack
 Built in java using Swing
+
 Developed in Eclipse
 
 ## System requirements
 Windows 10 or 11
+
 No Java needed
 
 
