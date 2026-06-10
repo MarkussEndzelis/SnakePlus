@@ -170,6 +170,7 @@ public class GamePanel extends JPanel {
 		Snake snake = state.getSnake();
 		var body = snake.getBody();
 		boolean isHead = true;
+		int index = 0;
 
 		if (state.isGhost()) {
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
@@ -177,13 +178,14 @@ public class GamePanel extends JPanel {
 
 		for (Point p : body) {
 			if (isHead) {
-				g.setColor(currentSkin.getHeadColor());
+				g.setColor(getSegmentColor(currentSkin, 0, true));
 				g.fillRoundRect(p.x * TILE + 1, p.y * TILE + 1, TILE - 2, TILE - 2, 8, 8);
 				isHead = false;
 			} else {
-				g.setColor(currentSkin.getBodyColor());
+				g.setColor(getSegmentColor(currentSkin, index, false));
 				g.fillRoundRect(p.x * TILE + 2, p.y * TILE + 2, TILE - 4, TILE - 4, 6, 6);
 			}
+			index++;
 		}
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 	}
@@ -360,4 +362,28 @@ public class GamePanel extends JPanel {
 			g.drawString(letter, p.x * TILE + 7, p.y * TILE + 16);
 		}
 	}
-}
+	static Color getSegmentColor(SnakeSkin skin, int index, boolean isHead) {
+		switch(skin.getName()) {
+		case "Rainbow":
+			float hue = (index * 20) % 360;
+			return Color.getHSBColor(hue / 360f, 1f, 1f);
+		case "Galaxy":
+			if(!isHead && index % 7 == 0) {
+				return Color.decode("#ffffff");
+			}
+				float t = (index % 10) / 10f;
+				int r = (int)(0x1a + t * (0x9b - 0x1a));
+				int gv = (int)(0x00 + t * (0x59 - 0x00));
+				int b = (int)(0x30 + t * (0xb6 - 0x30));
+				return new Color(r, gv, b);
+		case "Lava":
+			if(isHead) {
+				return Color.decode("#ff4500");
+			}
+			return (index % 2 == 0) ? Color.decode("#ff6a00") : Color.decode("#8b1a00");
+		default:
+			return isHead ? skin.getHeadColor() : skin.getBodyColor();
+			}
+		}
+	}
+

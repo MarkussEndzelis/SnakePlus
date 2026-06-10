@@ -134,10 +134,10 @@ public class SkinsScreen extends JPanel {
 			int px = cx + cardW / 2 - previewSize * 2;
 			int py = cy + 20;
 			for(int s = 4; s >= 0; s--) {
-				if(s == 0) {
-					g2.setColor(unlocked ? skin.getHeadColor() : Color.decode("#333344"));
+				if(!unlocked) {
+					g2.setColor(s == 0 ? Color.decode("#333344") : Color.decode("#222233"));
 				}else {
-					g2.setColor(unlocked ? skin.getBodyColor() : Color.decode("#222233"));
+					g2.setColor(GamePanel.getSegmentColor(skin, s, s == 0));
 				}
 				g2.fillRoundRect(px + s * previewSize, py, previewSize - 2, previewSize - 2, 5, 5);
 			}

@@ -242,10 +242,10 @@ public class ShopScreen extends JPanel {
 			int px = x + shape[i][0] * tile;
 			int py = y + shape[i][1] * tile;
 			if (i == 0) {
-				g.setColor(skin.getHeadColor());
+				g.setColor(GamePanel.getSegmentColor(skin, 0, true));
 				g.fillRoundRect(px, py, tile - 1, tile - 1, 4, 4);
 			} else {
-				g.setColor(skin.getBodyColor());
+				g.setColor(GamePanel.getSegmentColor(skin, i, false));
 				g.fillRoundRect(px + 1, py + 1, tile - 3, tile - 3, 3, 3);
 			}
 		}

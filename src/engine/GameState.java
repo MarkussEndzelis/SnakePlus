@@ -46,7 +46,8 @@ public class GameState {
 	public GameState(GameMap map, boolean powerUpsEnabled) {
 		this.map = map;
 		this.powerUpsEnabled = powerUpsEnabled;
-		snake = new Snake(COLS / 2, ROWS / 2);
+		Point spawn = getSpawnPoint(map);
+		snake = new Snake(spawn.x, spawn.y);
 		spawnFood();
 	}
 
@@ -119,6 +120,13 @@ public class GameState {
 		
 	}
 
+	private Point getSpawnPoint(GameMap map) {
+		return switch(map.getName()) {
+		case "Maze" -> new Point(11, 2);
+		default -> new Point(COLS / 2, ROWS / 2);
+		};
+	}
+	
 	private void spawnFood() {
 		var occupied = snake.getBodySet();
 		occupied.addAll(map.getWalls());
