@@ -26,9 +26,12 @@ import model.Snake;
 import powerup.PowerUp;
 import score.CoinManager;
 import score.HighScoremanager;
+import score.LeaderboardManager;
 import skin.SkinRegistry;
 import skin.SnakeSkin;
 import util.FontManager;
+import score.UsernameManager;
+import score.LeaderboardManager;
 
 public class GamePanel extends JPanel {
 	private Runnable onBackToMenu;
@@ -126,6 +129,13 @@ public class GamePanel extends JPanel {
 				CoinManager.addCoins(state.getCoinsEarned());
 				newHighScore = HighScoremanager.isHighScore(state.getMap().getName(), state.getScore());
 				HighScoremanager.saveScore(state.getMap().getName(), state.getScore());
+				if(state.isGameOver()) {
+					((Timer) e.getSource()).stop();
+					CoinManager.addCoins(state.getCoinsEarned());
+					newHighScore = HighScoremanager.isHighScore(state.getMap().getName(), state.getScore());
+					HighScoremanager.saveScore(state.getMap().getName(), state.getScore());
+					LeaderboardManager.submitScore(UsernameManager.getUsername(), state.getMap().getName(), state.getScore());
+				}
 			}
 		});
 		timer.start();

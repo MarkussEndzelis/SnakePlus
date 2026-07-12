@@ -5,6 +5,8 @@ import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import score.UsernameManager;
+import javax.swing.JOptionPane;
 
 import map.GameMap;
 import score.SkinManager;
@@ -20,6 +22,20 @@ import ui.SkinsScreen;
 public class Main {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
+			if (!UsernameManager.hasUsername()) {
+				String name = null;
+				while(name == null || name.trim().isEmpty()) {
+					name = JOptionPane.showInputDialog(null, 
+							"Enter a username for the leaderboard:",
+							"Welcome to Snake+", JOptionPane.PLAIN_MESSAGE);
+					if (name == null) {
+						name = "Player";
+						break;
+					}
+				}
+				UsernameManager.setUsername(name.trim());
+			}
+			
 			JFrame frame = new JFrame("Snake+");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setResizable(false);
