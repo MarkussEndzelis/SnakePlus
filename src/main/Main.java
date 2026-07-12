@@ -6,15 +6,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import engine.GameState;
-import ui.ShopScreen;
 import map.GameMap;
+import score.SkinManager;
 import skin.SnakeSkin;
 import ui.GamePanel;
+import ui.LeaderboardScreen;
 import ui.MainMenuScreen;
 import ui.MapSelectScreen;
+import ui.ShopScreen;
 import ui.SkinSelectScreen;
-import score.SkinManager;
 import ui.SkinsScreen;
 
 public class Main {
@@ -33,6 +33,7 @@ public class Main {
 			GamePanel gamePanel = new GamePanel();
 			ShopScreen shopScreen = new ShopScreen();
 			SkinsScreen skinsScreen = new SkinsScreen();
+			LeaderboardScreen leaderboardScreen = new LeaderboardScreen();
 			
 			root.add(shopScreen, "SHOP");
 			root.add(mainMenu, "MAIN_MENU");
@@ -40,6 +41,7 @@ public class Main {
 			root.add(skinSelect, "SKIN_SELECT");
 			root.add(gamePanel, "GAME");
 			root.add(skinsScreen, "SKINS");
+			root.add(leaderboardScreen, "LEADERBOARD");
 			
 			final GameMap[] chosenMap = {
 				null	
@@ -48,6 +50,20 @@ public class Main {
 				cards.show(root, "MAIN_MENU");
 				SwingUtilities.invokeLater( () -> mainMenu.requestFocusInWindow());
 			});
+			
+			
+			
+			leaderboardScreen.setOnBack(() -> {
+				cards.show(root, "MAIN_MENU");
+				SwingUtilities.invokeLater(() -> mainMenu.requestFocusInWindow());
+			});
+			
+			mainMenu.setOnLeaderboard(() -> {
+				leaderboardScreen.loadScores("Classic");
+				cards.show(root, "LEADERBOARD");
+				SwingUtilities.invokeLater(() -> leaderboardScreen.requestFocusInWindow());
+			});
+			
 			mainMenu.setOnPlay(() -> {
 				mainMenu.stopAnim();
 				cards.show(root, "MAP_SELECT");

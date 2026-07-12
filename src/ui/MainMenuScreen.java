@@ -25,13 +25,14 @@ public class MainMenuScreen extends JPanel {
 	private Timer animTimer;
 	private Runnable onShop;
 	private Runnable onSkins;
+	private Runnable onLeaderboard;
 	
 	private int snakeOffest = 0;
 	
 	public MainMenuScreen() {
 		setBackground(Color.decode("#0f0f1a"));
 		setFocusable(true);
-		setPreferredSize(new Dimension(GameState.COLS * GamePanel.TILE, GameState.ROWS * GamePanel.TILE + 80));
+		setPreferredSize(new Dimension(GameState.COLS * GamePanel.TILE, GameState.ROWS * GamePanel.TILE + 140));
 		
 		animTimer = new Timer(50, e -> {
 			animTick++;
@@ -76,11 +77,20 @@ public class MainMenuScreen extends JPanel {
 						onSkins.run();
 					}
 				}
+				int leaderboardY = skinsY + 50 + 16;
+				if(e.getX() >= bx && e.getX() <= bx + 200 && e.getY() >= leaderboardY && e.getY() <= leaderboardY + 50) {
+					if(onLeaderboard != null) {
+						onLeaderboard.run();
+					}
+				}
 			}
 		});
 	}
 	public void setOnSkins(Runnable onSkins) {
 		this.onSkins = onSkins;
+	}
+	public void setOnLeaderboard(Runnable onLeaderboard) {
+		this.onLeaderboard = onLeaderboard;
 	}
 	public void setOnPlay(Runnable onPlay) {
 		this.onPlay = onPlay;
@@ -219,6 +229,13 @@ public class MainMenuScreen extends JPanel {
 		g.setColor(Color.decode("#0f0f1a"));
 		label = "SKINS";
 		g.drawString(label, bx + (bw - fm.stringWidth(label)) / 2, skinsY + (bh + fm.getAscent() - fm.getDescent()) / 2);
+		
+		int leaderboardY = skinsY + bh + 10;
+		g.setColor(Color.decode("#ff6b81"));
+		g.fillRoundRect(bx, leaderboardY, bw, bh, 14, 14);
+		g.setColor(Color.decode("#0f0f1a"));
+		label = "LEADERBOARD";
+		g.drawString(label, bx + (bw - fm.stringWidth(label)) / 2, leaderboardY + (bh + fm.getAscent() - fm.getDescent()) / 2);
 	}
 	private void drawSubtitle(Graphics2D g, int w, int h) {
 		String ver = "v1.0 Snake+";
