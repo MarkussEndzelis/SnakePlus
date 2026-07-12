@@ -33,23 +33,26 @@ public class LeaderboardScreen extends JPanel {
 		});
 		
 		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int w = getWidth();
-				int h = getHeight();
-				
-				if (e.getX() >= 20 && e.getX() <= 120 && e.getY() >= h - 50 && e.getY() <= h - 20) {
-					if (onBack != null) {
-						onBack.run();
-					}
-				}
-				if(e.getX() >= w/2 - 120 && e.getX() <= w/2 - 10 && e.getY() >= 55 && e.getY() <= 85) {
-					loadScores("Classic");
-				}
-				if(e.getX() >= w/2 + 10 && e.getX() <= w/2 + 150 && e.getY() >= 55 && e.getY() <= 85) {
-					loadScores("Obstacle Course");
-				}
-			}
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		        int w = getWidth();
+		        int h = getHeight();
+
+		        if (e.getX() >= 20 && e.getX() <= 120 && e.getY() >= h - 50 && e.getY() <= h - 20) {
+		            if (onBack != null) {
+		                onBack.run();
+		            }
+		        }
+		        if(e.getX() >= w/2 - 195 && e.getX() <= w/2 - 85 && e.getY() >= 55 && e.getY() <= 85) {
+		            loadScores("Classic");
+		        }
+		        if(e.getX() >= w/2 - 75 && e.getX() <= w/2 + 35 && e.getY() >= 55 && e.getY() <= 85) {
+		            loadScores("Obstacle map");
+		        }
+		        if(e.getX() >= w/2 + 45 && e.getX() <= w/2 + 155 && e.getY() >= 55 && e.getY() <= 85) {
+		            loadScores("Maze");
+		        }
+		    }
 		});
 	}
 	
@@ -145,9 +148,9 @@ public class LeaderboardScreen extends JPanel {
 		FontMetrics fm = g2.getFontMetrics();
 		String title = "GLOBAL LEADERBOARD";
 		g2.drawString(title, (w - fm.stringWidth(title)) / 2, 45);
-		
-		drawMapButton(g2, "Classic", w/2 - 120, 55, mapName.equals("Classic"));
-		drawMapButton(g2, "Obstacle Course", w/2 + 10, 55, mapName.equals("Obstacle Course"));
+		drawMapButton(g2, "Classic", w/2 - 195, 55, mapName.equals("Classic"));
+		drawMapButton(g2, "Obstacle Map", w/2 - 75, 55, mapName.equals("Obstacle map"));
+		drawMapButton(g2, "Maze", w/2 + 45, 55, mapName.equals("Maze"));
 		
 		g2.setColor(Color.decode("#f2f3542"));
 		g2.fillRect(40, 95, w - 80, 2);
