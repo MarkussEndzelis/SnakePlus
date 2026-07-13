@@ -63,6 +63,10 @@ public class GameState {
 				mo.update();
 			}
 		}
+		
+		if (food != null && map.getWalls().contains(food)) {
+			spawnFood();
+		}
 
 		snake.move();
 		Point head = snake.getHead();

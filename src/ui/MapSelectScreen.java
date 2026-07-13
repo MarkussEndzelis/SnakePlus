@@ -18,12 +18,14 @@ import map.GameMap;
 import map.MazeMap;
 import map.ObstacleMap;
 import util.FontManager;
+import map.ShrinkingArenaMap;
 
 public class MapSelectScreen extends JPanel{
 	private final GameMap[] maps = {
 			new ClassicMap(),
 			new ObstacleMap(),
-			new MazeMap()
+			new MazeMap(),
+			new ShrinkingArenaMap()
 	};
 	
 	private int selected = 0;
@@ -59,9 +61,9 @@ public class MapSelectScreen extends JPanel{
 			public void mouseClicked(MouseEvent e) {
 				int w = getWidth();
 				int h = getHeight();
-				int cardW = 200;
-				int cardH = 280;
-				int spacing = 20;
+				int spacing = 16;
+				int cardW = Math.min(200, (w - spacing * (maps.length + 1)) / maps.length);
+				int cardH = (int) (cardW * 1.4);
 				int totalW = maps.length * cardW + (maps.length - 1) * spacing;
 				int startX = (w - totalW) / 2;
 				int cardY = h / 2 - cardH / 2;
@@ -110,9 +112,9 @@ public class MapSelectScreen extends JPanel{
 		String title = "SELECT MAP";
 		g2.drawString(title, (w - fm.stringWidth(title)) / 2, 80);
 		
-		int cardW = 200;
-		int cardH = 280;
-		int spacing = 20;
+		int spacing = 16;
+		int cardW = Math.min(200, (w - spacing * (maps.length + 1)) / maps.length);
+		int cardH = (int)(cardW * 1.4);
 		int totalW = maps.length * cardW + (maps.length - 1) * spacing;
 		int startX = (w - totalW) / 2;
 		int cardY = h / 2 - cardH / 2;
@@ -181,6 +183,7 @@ public class MapSelectScreen extends JPanel{
 		case "Classic" -> "Open grid";
 		case "Obstacle map" -> "Walls + obstacles";
 		case "Maze" -> "Tight corridors";
+		case "Shrinking Arena" -> "Walls close in!";
 		default -> "";
 		};
 	}

@@ -118,6 +118,7 @@ public class GamePanel extends JPanel {
 		if (timer != null) {
 			timer.stop();
 		}
+		map.reset();
 		state = new GameState(map, powerUpsEnabled);
 		newHighScore = false;
 		timer = new Timer(state.getTickInterval(), e -> {
@@ -347,6 +348,11 @@ public class GamePanel extends JPanel {
 		g.setColor(Color.decode("#576574"));
 		for (Point p : state.getMap().getWalls()) {
 			g.fillRect(p.x * TILE, p.y * TILE, TILE, TILE);
+		}
+		
+		g.setColor(Color.decode("#ff4757"));
+		for (Point p: state.getMap().getWarningTiles()) {
+			g.fillRect(p.x  * TILE + 4, p.y * TILE + 4, TILE - 8, TILE - 8);
 		}
 	}
 

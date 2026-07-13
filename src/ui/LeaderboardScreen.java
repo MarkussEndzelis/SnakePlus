@@ -43,14 +43,17 @@ public class LeaderboardScreen extends JPanel {
 		                onBack.run();
 		            }
 		        }
-		        if(e.getX() >= w/2 - 195 && e.getX() <= w/2 - 85 && e.getY() >= 55 && e.getY() <= 85) {
+		        if(e.getX() >= w/2 - 235 && e.getX() <= w/2 - 125 && e.getY() >= 55 && e.getY() <= 85) {
 		            loadScores("Classic");
 		        }
-		        if(e.getX() >= w/2 - 75 && e.getX() <= w/2 + 35 && e.getY() >= 55 && e.getY() <= 85) {
+		        if(e.getX() >= w/2 - 115 && e.getX() <= w/2 - 5 && e.getY() >= 55 && e.getY() <= 85) {
 		            loadScores("Obstacle map");
 		        }
-		        if(e.getX() >= w/2 + 45 && e.getX() <= w/2 + 155 && e.getY() >= 55 && e.getY() <= 85) {
+		        if(e.getX() >= w/2 + 5 && e.getX() <= w/2 + 115 && e.getY() >= 55 && e.getY() <= 85) {
 		            loadScores("Maze");
+		        }
+		        if(e.getX() >= w/2 + 125 && e.getX() <= w/2 + 235 && e.getY() >= 55 && e.getY() <= 85) {
+		        	loadScores("Shrinking Arena");
 		        }
 		    }
 		});
@@ -148,9 +151,10 @@ public class LeaderboardScreen extends JPanel {
 		FontMetrics fm = g2.getFontMetrics();
 		String title = "GLOBAL LEADERBOARD";
 		g2.drawString(title, (w - fm.stringWidth(title)) / 2, 45);
-		drawMapButton(g2, "Classic", w/2 - 195, 55, mapName.equals("Classic"));
-		drawMapButton(g2, "Obstacle Map", w/2 - 75, 55, mapName.equals("Obstacle map"));
-		drawMapButton(g2, "Maze", w/2 + 45, 55, mapName.equals("Maze"));
+		drawMapButton(g2, "Classic", w/2 - 235, 55, mapName.equals("Classic"));
+		drawMapButton(g2, "Obstacle Map", w/2 - 115, 55, mapName.equals("Obstacle map"));
+		drawMapButton(g2, "Maze", w/2 + 5, 55, mapName.equals("Maze"));
+		drawMapButton(g2, "Shrinking Arena", w/2 + 125, 55, mapName.equals("Shrinking Arena"));
 		
 		g2.setColor(Color.decode("#f2f3542"));
 		g2.fillRect(40, 95, w - 80, 2);
