@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -17,8 +18,8 @@ import map.ClassicMap;
 import map.GameMap;
 import map.MazeMap;
 import map.ObstacleMap;
-import util.FontManager;
 import map.ShrinkingArenaMap;
+import util.FontManager;
 
 public class MapSelectScreen extends JPanel{
 	private final GameMap[] maps = {
@@ -130,16 +131,21 @@ public class MapSelectScreen extends JPanel{
 			g2.setStroke(new BasicStroke(1));
 			g2.drawRoundRect(cardX, cardY, cardW, cardH, 16, 16);
 			
-			drawMapPreview(g2, maps[i], cardX + 20, cardY + 20, cardW - 40, 140);
+			int previewH = (int) (cardH * 0.5);
+			drawMapPreview(g2, maps[i], cardX + 20, cardY + 20, cardW - 40, previewH);
 			
+			int nameY = cardY + previewH + 45;
 			g2.setColor(isSelected ? Color.decode("#2ed573") : Color.WHITE);
-			g2.setFont(FontManager.GAME);
-			g2.drawString(maps[i].getName(), cardX + 20, cardY + 185);
+			g2.setFont(fitFont(g2, maps[i].getName(), FontManager.GAME, cardW - 20));
+			FontMetrics nameFm = g2.getFontMetrics();
+			g2.drawString(maps[i].getName(), cardX + (cardW - nameFm.stringWidth(maps[i].getName())) / 2, nameY);
 			
+			int descY = nameY + 22;
 			g2.setColor(Color.decode("#a4b0be"));
-			g2.setFont(FontManager.GAME_SMALL);
+			g2.setFont(fitFont(g2, getDescription(maps[i]), FontManager.GAME_SMALL, cardW - 20));
 			String desc = getDescription(maps[i]);
-			g2.drawString(desc, cardX + 20, cardY + 210);
+			FontMetrics descFm = g2.getFontMetrics();
+			g2.drawString(desc, cardX + (cardW - descFm.stringWidth(desc)) / 2, descY);
 			
 			
 		}
@@ -186,5 +192,14 @@ public class MapSelectScreen extends JPanel{
 		case "Shrinking Arena" -> "Walls close in!";
 		default -> "";
 		};
+	}
+	
+	private Font fitFont(Graphics2D g, String text, Font baseFont, int maxWidth) {
+		Font font = baseFont;
+		FontMetrics fm = g.getFontMetrics(font);
+		while(fm.stringWidth(text) > maxWidth && font.getSize() > 9) {
+			font = font.deriveFont((float) (font.getSize() - 1));
+		}
+		return font;
 	}
 }
