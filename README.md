@@ -12,6 +12,7 @@ Snake+ is a windows playable game. It is extended version of original Snake. I m
 - Shop - place where you can buy skins
 - Coins - currency which you can earn by collecting apples and spend in shop
 - Effects - different effects that could help and grief your game.
+- Leaderboard - list with players and their scores.
 
 ## How to play
 Controls :
